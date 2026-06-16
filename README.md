@@ -34,3 +34,67 @@ Each release should happen automatically.
 * please review [deployment](k8s/nginx.yaml)
 
 * extras: proper explanation
+
+---
+
+## Solution
+
+### Stack
+
+- **App**: Node.js HTTP server with a `/metrics` (Prometheus) and `/healthz` endpoint
+- **Tracing**: OpenTelemetry auto-instrumentation → Jaeger
+- **Cluster**: k3s via k3d (k3s running inside Docker, no root required)
+- **Packaging**: Helm chart
+- **Monitoring**: kube-prometheus-stack (Prometheus + Grafana) + Jaeger
+- **CI**: GitHub Actions — builds and pushes the image to GHCR on every push/tag
+
+### Prerequisites
+
+- Docker
+- k3d:
+  ```bash
+  curl -sSL https://github.com/k3d-io/k3d/releases/download/v5.6.3/k3d-linux-amd64 -o ~/.local/bin/k3d && chmod +x ~/.local/bin/k3d
+  ```
+- Helm:
+  ```bash
+  curl -sSL https://get.helm.sh/helm-v3.14.4-linux-amd64.tar.gz | tar -xz && mv linux-amd64/helm ~/.local/bin/
+  ```
+
+### /etc/hosts
+
+Add the local domains:
+
+```
+127.0.0.1 hello-app.local grafana.local jaeger.local
+```
+
+### Bring up the cluster
+
+```bash
+./scripts/cluster-up.sh
+```
+
+This creates the k3d cluster, builds and imports the app image, installs Prometheus, Grafana and Jaeger, and deploys the app via Helm.
+
+### Access the services
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| App | http://hello-app.local:8080 | - |
+| Grafana | http://grafana.local:8080 | admin / admin |
+| Jaeger | http://jaeger.local:8080 | - |
+
+### Release a new version
+
+Tag a commit and push — GitHub Actions builds and pushes the image automatically:
+
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+### Tear down
+
+```bash
+./scripts/cluster-down.sh
+```
