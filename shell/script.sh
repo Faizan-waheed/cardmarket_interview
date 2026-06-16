@@ -1,10 +1,11 @@
-STDOUT="/dev/stdout"
-LOG_FILE='$STDOUT'
-LOG_MESSAGE='is the date, should log to $STDOUT'
+#!/usr/bin/env bash
 
-# log with timestamp
+STDOUT="/dev/stdout"
+LOG_FILE="$STDOUT"
+LOG_MESSAGE="is the date, should log to $STDOUT"
+
 log_message() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOGFILE"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
 }
 
-log_message $LOG_MESSAGE
+log_message "$LOG_MESSAGE"
