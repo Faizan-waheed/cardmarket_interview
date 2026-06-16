@@ -1,0 +1,8 @@
+apiVersion: v2
+name: hello-app
+description: Helm chart for the interview hello-app (Node.js)
+type: application
+# version  -> the chart's own version (bump on chart changes)
+# appVersion -> the default app/image version this chart ships
+version: 0.1.0
+appVersion: "1.0.0"
