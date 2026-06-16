@@ -5,6 +5,7 @@ metadata:
   name: grafana
   namespace: monitoring
 spec:
+  ingressClassName: traefik
   rules:
     - host: grafana.local
       http:
@@ -23,6 +24,7 @@ metadata:
   name: jaeger
   namespace: monitoring
 spec:
+  ingressClassName: traefik
   rules:
     - host: jaeger.local
       http:
@@ -31,6 +33,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: jaeger-query
+                name: jaeger
                 port:
                   number: 16686
