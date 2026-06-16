@@ -49,14 +49,14 @@ helm upgrade --install hello-app "${REPO_ROOT}/charts/hello-app" \
   --set jaeger.endpoint="http://jaeger-all-in-one.monitoring:14268/api/traces" \
   --wait --timeout 5m
 
-echo "==> 6/6 Done."
+echo "==> 6/6 Apply monitoring ingresses"
+kubectl apply -f "${REPO_ROOT}/k8s/monitoring-ingress.yaml"
+
 echo ""
-echo "  # App:"
-echo "  kubectl -n app port-forward svc/hello-app 8081:80"
-echo "  curl localhost:8081/"
+echo "Done. Add these to /etc/hosts:"
+echo "  127.0.0.1 hello-app.local grafana.local jaeger.local"
 echo ""
-echo "  # Grafana (admin/admin):"
-echo "  kubectl -n monitoring port-forward svc/monitoring-grafana 3000:80"
-echo ""
-echo "  # Jaeger UI:"
-echo "  kubectl -n monitoring port-forward svc/jaeger-query 16686:16686"
+echo "Then access:"
+echo "  http://hello-app.local:8080"
+echo "  http://grafana.local:8080     (admin / admin)"
+echo "  http://jaeger.local:8080"

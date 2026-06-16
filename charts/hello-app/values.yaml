@@ -34,6 +34,10 @@ securityContext:
 jaeger:
   endpoint: "http://jaeger-collector:14268/api/traces"
 
+ingress:
+  enabled: true
+  host: hello-app.local
+
 serviceMonitor:
   enabled: false
   interval: 15s
