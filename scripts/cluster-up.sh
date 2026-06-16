@@ -39,24 +39,27 @@ helm upgrade --install jaeger jaegertracing/jaeger \
   --set agent.enabled=false \
   --wait --timeout 5m
 
-echo "==> 5/6 Deploy hello-app"
-helm upgrade --install hello-app "${REPO_ROOT}/charts/hello-app" \
-  --namespace app --create-namespace \
-  --set image.repository="${IMAGE%:*}" \
-  --set image.tag="${IMAGE##*:}" \
-  --set image.pullPolicy=Never \
-  --set serviceMonitor.enabled=true \
-  --set jaeger.endpoint="http://jaeger-all-in-one.monitoring:14268/api/traces" \
-  --wait --timeout 5m
+echo "==> 5/6 Install ArgoCD"
+helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
+helm repo update
+helm upgrade --install argocd argo/argo-cd \
+  --namespace argocd --create-namespace \
+  --set server.extraArgs[0]="--insecure" \
+  --wait --timeout 10m
+kubectl apply -f "${REPO_ROOT}/k8s/argocd-app.yaml"
 
-echo "==> 6/6 Apply monitoring ingresses"
+echo "==> 6/6 Apply ingresses"
 kubectl apply -f "${REPO_ROOT}/k8s/monitoring-ingress.yaml"
 
 echo ""
 echo "Done. Add these to /etc/hosts:"
-echo "  127.0.0.1 hello-app.local grafana.local jaeger.local"
+echo "  127.0.0.1 hello-app.local grafana.local jaeger.local argocd.local"
 echo ""
 echo "Then access:"
 echo "  http://hello-app.local:8080"
 echo "  http://grafana.local:8080     (admin / admin)"
 echo "  http://jaeger.local:8080"
+echo "  http://argocd.local:8080      (admin / get password below)"
+echo ""
+echo "  ArgoCD password:"
+echo "  kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"

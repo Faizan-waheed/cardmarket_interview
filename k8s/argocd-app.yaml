@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Faizan-waheed/cardmarket_interview
+    targetRevision: HEAD
+    path: charts/hello-app
+    helm:
+      parameters:
+        - name: image.repository
+          value: hello-app
+        - name: image.tag
+          value: local
+        - name: image.pullPolicy
+          value: Never
+        - name: serviceMonitor.enabled
+          value: "true"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
