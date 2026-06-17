@@ -45,6 +45,7 @@ Each release should happen automatically.
 - **Tracing**: OpenTelemetry auto-instrumentation → Jaeger
 - **Cluster**: k3s via k3d (k3s running inside Docker, no root required)
 - **Packaging**: Helm chart
+- **GitOps**: ArgoCD — watches the git repo and auto-deploys on every push
 - **Monitoring**: kube-prometheus-stack (Prometheus + Grafana) + Jaeger
 - **CI**: GitHub Actions — builds and pushes the image to GHCR on every push/tag
 
@@ -65,7 +66,7 @@ Each release should happen automatically.
 Add the local domains:
 
 ```
-127.0.0.1 hello-app.local grafana.local jaeger.local
+127.0.0.1 hello-app.local grafana.local jaeger.local argocd.local
 ```
 
 ### Bring up the cluster
@@ -74,7 +75,7 @@ Add the local domains:
 ./scripts/cluster-up.sh
 ```
 
-This creates the k3d cluster, builds and imports the app image, installs Prometheus, Grafana and Jaeger, and deploys the app via Helm.
+This creates the k3d cluster, builds and imports the app image, installs Prometheus, Grafana, Jaeger, and ArgoCD. ArgoCD then takes over and deploys the app from git automatically.
 
 ### Access the services
 
@@ -83,14 +84,21 @@ This creates the k3d cluster, builds and imports the app image, installs Prometh
 | App | http://hello-app.local:8080 | - |
 | Grafana | http://grafana.local:8080 | admin / admin |
 | Jaeger | http://jaeger.local:8080 | - |
+| ArgoCD | http://argocd.local:8080 | admin / see below |
+
+ArgoCD initial password:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+```
 
 ### Release a new version
 
 Tag a commit and push — GitHub Actions builds and pushes the image automatically:
 
 ```bash
-git tag v1.1.0
-git push origin v1.1.0
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
 ### Tear down
