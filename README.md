@@ -112,8 +112,8 @@ git push origin v1.2.0
 ### ArgoCD
 ![ArgoCD](argoCD.png)
 
-### ArgoCD Application
-![Application](application.png)
+### Hello App
+![Hello App](application.png)
 
 ### Grafana
 ![Grafana](grafana.png)
