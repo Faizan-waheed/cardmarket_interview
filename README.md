@@ -98,3 +98,17 @@ git push origin v1.1.0
 ```bash
 ./scripts/cluster-down.sh
 ```
+
+## Screenshots
+
+### ArgoCD
+![ArgoCD](argoCD.png)
+
+### ArgoCD Application
+![Application](application.png)
+
+### Grafana
+![Grafana](grafana.png)
+
+### Jaeger
+![Jaeger](jaeger.png)
