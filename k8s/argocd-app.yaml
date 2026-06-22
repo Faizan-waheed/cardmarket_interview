@@ -11,12 +11,6 @@ spec:
     path: charts/hello-app
     helm:
       parameters:
-        - name: image.repository
-          value: hello-app
-        - name: image.tag
-          value: local
-        - name: image.pullPolicy
-          value: Never
         - name: serviceMonitor.enabled
           value: "true"
   destination:

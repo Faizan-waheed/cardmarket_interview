@@ -1,8 +1,8 @@
 replicaCount: 3
 
 image:
-  repository: ghcr.io/OWNER/hello-app
-  tag: ""
+  repository: ghcr.io/faizan-waheed/cardmarket_interview
+  tag: "main"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
