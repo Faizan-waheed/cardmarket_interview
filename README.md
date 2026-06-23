@@ -94,12 +94,14 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.pas
 
 ### Release a new version
 
-Tag a commit and push — GitHub Actions builds and pushes the image automatically:
+Tag a commit and push:
 
 ```bash
 git tag v1.2.0
 git push origin v1.2.0
 ```
+
+GitHub Actions builds the image, pushes it to GHCR, then commits the updated tag back to `charts/hello-app/values.yaml`. ArgoCD detects that commit and rolls out the new version automatically.
 
 ### Tear down
 
